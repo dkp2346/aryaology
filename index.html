@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>💌 Aryaology</title>
+  <title>🙈 Aryaology</title>
   <style>
     :root { --bg1:#ffdde8; --bg2:#fff6fa; --card:#ffffffcc; --ink:#1f1f1f; --accent:#ff3b7a; }
     *{box-sizing:border-box}
@@ -29,7 +29,7 @@
       backface-visibility:hidden; overflow:hidden;
       background: linear-gradient(135deg, #fff, #fff3f7);
     }
-    .front h1{margin:0; font-size:32px}
+    .front h1{margin:0; font-size:30px}
     .front p{margin:10px 0 0; opacity:.8}
     .seal{
       position:absolute; bottom:22px; right:22px;
@@ -38,7 +38,7 @@
       display:grid; place-items:center; color:white; font-size:28px;
       box-shadow: 0 10px 22px rgba(255,59,122,.35);
     }
-    .back{transform: rotateY(180deg); padding:26px; align-items:stretch; justify-content:center;}
+    .back{transform: rotateY(180deg); padding:26px;}
     .panel{
       background: var(--card);
       border: 1px solid rgba(0,0,0,.06);
@@ -68,21 +68,31 @@
       <div class="card" id="card">
         <div class="face front">
           <div style="text-align:center; padding:24px">
-            <h1>💌 Tap to open</h1>
-            <p>Welcome to Aryaology…</p>
+            <h1>Mr. DJ has a question for you</h1>
+            <p>Tap to open 🙈</p>
           </div>
-          <div class="seal">❤</div>
+          <div class="seal">🙈</div>
         </div>
 
         <div class="face back">
           <div class="panel">
-            <h2 class="title">Will you be my Valentine, Arya? 💘</h2>
-            <p class="msg">Current topic in Aryaology: why you make my days better.</p>
+            <h2 class="title">Will you be my Valentine, Arya? 🙈</h2>
+            <p class="msg">Current topic in Aryaology: Why you make me laugh?</p>
+
             <div class="btnRow">
               <button class="yes" id="yesBtn">Yes 😍</button>
               <button class="no" id="noBtn">No 🙃</button>
             </div>
+
             <div class="result" id="result"></div>
+
+            <div id="videoWrap" style="display:none; margin-top:14px;">
+              <video id="valVideo" playsinline controls style="width:100%; border-radius:16px;">
+                <source src="funnytiktok.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
             <div class="hint">Tap the card background to close ✨</div>
           </div>
         </div>
@@ -118,7 +128,12 @@
 
   yesBtn.addEventListener("click", () => {
     confettiBurst();
-    resultEl.textContent = "YAY 💞 Aryaology confirms: we’re officially a thing.";
+    resultEl.textContent = "YAY 🙈 Aryaology confirms: successful diagnosis.";
+
+    const videoWrap = document.getElementById("videoWrap");
+    const valVideo = document.getElementById("valVideo");
+    videoWrap.style.display = "block";
+    valVideo.play().catch(()=>{});
   });
 
   function moveNoButton(){
@@ -126,14 +141,12 @@
     const pad = 16;
     const maxX = window.innerWidth - rect.width - pad;
     const maxY = window.innerHeight - rect.height - pad;
-    const x = Math.max(pad, Math.random()*maxX);
-    const y = Math.max(pad, Math.random()*maxY);
     noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    noBtn.style.left = Math.max(pad, Math.random()*maxX) + "px";
+    noBtn.style.top  = Math.max(pad, Math.random()*maxY) + "px";
   }
   noBtn.addEventListener("mouseenter", moveNoButton);
-  noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNoButton(); }, {passive:false});
+  noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveNoButton(); }, {passive:false});
 </script>
 </body>
 </html>
