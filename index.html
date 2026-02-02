@@ -86,6 +86,7 @@
 
             <div class="result" id="result"></div>
 
+            <!-- Video (shows + plays after YES) -->
             <div id="videoWrap" style="display:none; margin-top:14px;">
               <video id="valVideo" playsinline controls style="width:100%; border-radius:16px;">
                 <source src="funnytiktok.mp4" type="video/mp4">
@@ -126,6 +127,7 @@
     }
   }
 
+  // YES: confetti + message + show & play video
   yesBtn.addEventListener("click", () => {
     confettiBurst();
     resultEl.textContent = "YAY 🙈 Aryaology confirms: successful diagnosis.";
@@ -136,6 +138,7 @@
     valVideo.play().catch(()=>{});
   });
 
+  // NO button dodges
   function moveNoButton(){
     const rect = noBtn.getBoundingClientRect();
     const pad = 16;
