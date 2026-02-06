@@ -46,6 +46,7 @@
     }
     .title{font-size:26px; margin:0 0 8px}
     .msg{font-size:16px; margin:0; line-height:1.35; opacity:.9}
+
     .btnRow{display:flex; gap:12px; justify-content:center; margin-top:14px; flex-wrap:wrap}
     button{
       border:0; border-radius:999px; padding:12px 18px; font-size:16px;
@@ -55,11 +56,42 @@
     button:active{transform: translateY(1px) scale(.99)}
     .yes{background: linear-gradient(135deg, var(--accent), #ff6aa1); color:white; box-shadow: 0 12px 30px rgba(255,59,122,.28);}
     .no{background: linear-gradient(135deg, #111827, #374151); color:white; box-shadow: 0 12px 30px rgba(0,0,0,.2); position:relative;}
-    .result{text-align:center; font-size:18px; margin-top:10px; min-height:28px; font-weight:600;}
+
+    .result{text-align:center; font-size:18px; margin-top:10px; min-height:28px; font-weight:700;}
+
     .hint{opacity:.75; font-size:14px; text-align:center; margin-top:14px}
 
     .confetti{position:absolute; top:-10px; width:10px; height:14px; opacity:.9; animation: fall 1200ms linear forwards; border-radius:4px; transform: rotate(var(--r));}
     @keyframes fall{to{transform: translateY(110vh) rotate(calc(var(--r) + 260deg)); opacity:0}}
+
+    /* Choice buttons (after YES) */
+    .choices{
+      display:none;
+      margin-top:12px;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+    .choiceBtn{
+      background: linear-gradient(135deg, #ffffff, #fff3f7);
+      border: 1px solid rgba(0,0,0,.08);
+      color: var(--ink);
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      font-weight:700;
+    }
+
+    /* Content areas */
+    .contentBox{
+      display:none;
+      margin-top:14px;
+      padding:14px;
+      border-radius:16px;
+      border: 1px solid rgba(0,0,0,.06);
+      background: rgba(255,255,255,.8);
+      text-align:center;
+      line-height:1.35;
+      font-weight:650;
+    }
   </style>
 </head>
 <body>
@@ -68,10 +100,10 @@
       <div class="card" id="card">
         <div class="face front">
           <div style="text-align:center; padding:24px">
-            <h1>DJ has a question for you</h1>
-            <p>Tap to open ❤️</p>
+            <h1>Mr. DJ has a question for you</h1>
+            <p>Tap to open 🙈</p>
           </div>
-          <div class="seal">❤️</div>
+          <div class="seal">🙈</div>
         </div>
 
         <div class="face back">
@@ -86,12 +118,29 @@
 
             <div class="result" id="result"></div>
 
-            <!-- Video (shows + plays after YES) -->
+            <!-- Choices shown after YES -->
+            <div class="choices" id="choices">
+              <button class="choiceBtn" id="videoChoice">🎥 Video</button>
+              <button class="choiceBtn" id="cuteChoice">💛 Cute</button>
+              <button class="choiceBtn" id="dinnerChoice">🍽️ Dinner</button>
+            </div>
+
+            <!-- Video area -->
             <div id="videoWrap" style="display:none; margin-top:14px;">
               <video id="valVideo" playsinline controls style="width:100%; border-radius:16px;">
                 <source src="funnytiktok.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
+            </div>
+
+            <!-- Cute message area -->
+            <div class="contentBox" id="cuteBox">
+              You make me laugh in a way nobody else can 🙈💛
+            </div>
+
+            <!-- Dinner message area -->
+            <div class="contentBox" id="dinnerBox">
+              Dinner reservation on valentines saturday night more details to come.
             </div>
 
             <div class="hint">Tap the card background to close ✨</div>
@@ -127,15 +176,49 @@
     }
   }
 
-  // YES: confetti + message + show & play video
+  // Elements for choices + content
+  const choices = document.getElementById("choices");
+  const videoWrap = document.getElementById("videoWrap");
+  const valVideo = document.getElementById("valVideo");
+
+  const cuteBox = document.getElementById("cuteBox");
+  const dinnerBox = document.getElementById("dinnerBox");
+
+  const videoChoice = document.getElementById("videoChoice");
+  const cuteChoice = document.getElementById("cuteChoice");
+  const dinnerChoice = document.getElementById("dinnerChoice");
+
+  function hideAllContent(){
+    // stop video if playing
+    try { valVideo.pause(); valVideo.currentTime = 0; } catch(e) {}
+    videoWrap.style.display = "none";
+    cuteBox.style.display = "none";
+    dinnerBox.style.display = "none";
+  }
+
+  // YES: show the 3 options (not auto-play video anymore)
   yesBtn.addEventListener("click", () => {
     confettiBurst();
-    resultEl.textContent = "YAY 🙈 Aryaology confirms: successful diagnosis.";
+    resultEl.textContent = "Okayyy 🙈 pick one…";
+    choices.style.display = "flex";
+    hideAllContent();
+  });
 
-    const videoWrap = document.getElementById("videoWrap");
-    const valVideo = document.getElementById("valVideo");
+  // Choice buttons
+  videoChoice.addEventListener("click", () => {
+    hideAllContent();
     videoWrap.style.display = "block";
     valVideo.play().catch(()=>{});
+  });
+
+  cuteChoice.addEventListener("click", () => {
+    hideAllContent();
+    cuteBox.style.display = "block";
+  });
+
+  dinnerChoice.addEventListener("click", () => {
+    hideAllContent();
+    dinnerBox.style.display = "block";
   });
 
   // NO button dodges
