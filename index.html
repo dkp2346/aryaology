@@ -14,11 +14,13 @@
       background: radial-gradient(circle at 20% 20%, var(--bg2), var(--bg1));
       overflow:hidden;
     }
-    /* Slightly bigger overall layout */
-    .wrap{width:min(620px, 94vw); padding:28px}
+
+    /* Bigger overall area, still mobile-safe */
+    .wrap{width:min(760px, 96vw); padding:18px}
     .card3d{perspective:1200px}
     .card{
-      position:relative; width:100%; aspect-ratio: 4 / 3;
+      position:relative; width:100%;
+      aspect-ratio: 4 / 3;
       border-radius:24px; transform-style:preserve-3d;
       transition: transform 900ms cubic-bezier(.2,.8,.2,1);
       cursor:pointer; box-shadow: 0 20px 60px rgba(0,0,0,.18);
@@ -39,36 +41,41 @@
       display:grid; place-items:center; color:white; font-size:28px;
       box-shadow: 0 10px 22px rgba(255,59,122,.35);
     }
-    .back{transform: rotateY(180deg); padding:26px;}
+
+    .back{transform: rotateY(180deg); padding:18px;}
     .panel{
       background: var(--card);
       border: 1px solid rgba(0,0,0,.06);
-      border-radius:20px; padding:18px;
+      border-radius:20px;
+      padding:16px;
+      max-height: calc(100% - 6px);
+      overflow:auto; /* lets content scroll inside card if needed */
     }
-    .title{font-size:26px; margin:0 0 8px}
-    .msg{font-size:16px; margin:0; line-height:1.35; opacity:.9}
 
-    .btnRow{display:flex; gap:12px; justify-content:center; margin-top:14px; flex-wrap:wrap}
+    .title{font-size:24px; margin:0 0 6px}
+    .msg{font-size:15px; margin:0; line-height:1.35; opacity:.9}
+
+    .btnRow{display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap}
     button{
-      border:0; border-radius:999px; padding:12px 18px; font-size:16px;
-      font-weight:650; cursor:pointer; user-select:none;
+      border:0; border-radius:999px; padding:11px 16px; font-size:15px;
+      font-weight:700; cursor:pointer; user-select:none;
       transition: transform .12s ease, box-shadow .12s ease;
     }
     button:active{transform: translateY(1px) scale(.99)}
     .yes{background: linear-gradient(135deg, var(--accent), #ff6aa1); color:white; box-shadow: 0 12px 30px rgba(255,59,122,.28);}
     .no{background: linear-gradient(135deg, #111827, #374151); color:white; box-shadow: 0 12px 30px rgba(0,0,0,.2); position:relative;}
 
-    .result{text-align:center; font-size:18px; margin-top:10px; min-height:28px; font-weight:800;}
-    .hint{opacity:.75; font-size:14px; text-align:center; margin-top:14px}
+    .result{text-align:center; font-size:16px; margin-top:8px; min-height:24px; font-weight:800;}
+    .hint{opacity:.75; font-size:13px; text-align:center; margin-top:10px}
 
     .confetti{position:absolute; top:-10px; width:10px; height:14px; opacity:.9; animation: fall 1200ms linear forwards; border-radius:4px; transform: rotate(var(--r));}
     @keyframes fall{to{transform: translateY(110vh) rotate(calc(var(--r) + 260deg)); opacity:0}}
 
-    /* Choice buttons (after YES) */
+    /* Choices */
     .choices{
       display:none;
-      margin-top:12px;
-      gap:10px;
+      margin-top:10px;
+      gap:8px;
       justify-content:center;
       flex-wrap:wrap;
     }
@@ -78,18 +85,49 @@
       color: var(--ink);
       box-shadow: 0 10px 22px rgba(0,0,0,.08);
       font-weight:800;
+      padding:10px 14px;
+      font-size:14px;
     }
 
+    /* Content areas */
     .contentBox{
       display:none;
-      margin-top:14px;
-      padding:14px;
+      margin-top:10px;
+      padding:12px;
       border-radius:16px;
       border: 1px solid rgba(0,0,0,.06);
-      background: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.9);
       text-align:center;
       line-height:1.35;
       font-weight:750;
+    }
+
+    /* Media sizing: smaller so text is visible */
+    .media{
+      width:100%;
+      max-width:320px;       /* keeps it smaller on desktop */
+      max-height:180px;      /* prevents it from eating the card */
+      margin:0 auto 10px;
+      display:block;
+      border-radius:14px;
+      object-fit:cover;      /* crops nicely instead of stretching */
+    }
+    .video{
+      width:100%;
+      max-width:340px;
+      max-height:200px;
+      margin:0 auto;
+      display:block;
+      border-radius:16px;
+    }
+
+    /* Even tighter on small phones */
+    @media (max-width: 420px){
+      .wrap{width:96vw; padding:12px}
+      .title{font-size:22px}
+      .media{max-width:280px; max-height:160px}
+      .video{max-width:300px; max-height:180px}
+      button{padding:10px 14px; font-size:14px}
     }
   </style>
 </head>
@@ -117,48 +155,46 @@
 
             <div class="result" id="result"></div>
 
-            <!-- Choices shown after YES -->
             <div class="choices" id="choices">
               <button class="choiceBtn" id="videoChoice">🎥 Video</button>
               <button class="choiceBtn" id="cuteChoice">💛 Cute</button>
               <button class="choiceBtn" id="dinnerChoice">🍽️ Dinner</button>
             </div>
 
-            <!-- Video area (smaller + Close/go back) -->
-            <div id="videoWrap" style="display:none; margin-top:14px;">
+            <!-- Video area -->
+            <div id="videoWrap" style="display:none; margin-top:10px;">
               <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
                 <button class="choiceBtn" id="closeVideoBtn">✖ Go back</button>
               </div>
 
-              <video id="valVideo" playsinline controls
-                style="width:100%; max-width:420px; margin:0 auto; display:block; border-radius:16px;">
+              <video id="valVideo" playsinline controls class="video">
                 <source src="funnytiktok.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
 
-            <!-- Cute option: photo + message + Go back -->
+            <!-- Cute option -->
             <div class="contentBox" id="cuteBox">
               <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
                 <button class="choiceBtn" id="closeCuteBtn">✖ Go back</button>
               </div>
 
-              <img src="cutephoto.jpg" alt="cute"
-                style="width:100%; max-width:420px; margin:0 auto 10px; display:block; border-radius:14px;">
+              <img src="cutephoto.jpg" alt="cute" class="media">
 
-              You make me laugh in a way nobody else can 🙈💛
+              <div style="margin-top:2px;">
+                You make me laugh in a way nobody else can 🙈💛
+              </div>
               <div style="opacity:.85; font-weight:650; margin-top:6px;">
                 (Official Aryaology finding.)
               </div>
             </div>
 
-            <!-- Dinner message area -->
+            <!-- Dinner option -->
             <div class="contentBox" id="dinnerBox">
               <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
                 <button class="choiceBtn" id="closeDinnerBtn">✖ Go back</button>
               </div>
-
-              Dinner reservation on Valentines Saturday night more details to come later pookiee.
+              Dinner reservation on valentines saturday night more details to come.
             </div>
 
             <div class="hint">Tap the card background to close ✨</div>
@@ -203,7 +239,6 @@
     }
   }
 
-  // Elements for choices + content
   const choices = document.getElementById("choices");
   const videoWrap = document.getElementById("videoWrap");
   const valVideo = document.getElementById("valVideo");
@@ -220,7 +255,6 @@
   const closeDinnerBtn = document.getElementById("closeDinnerBtn");
 
   function hideAllContent(){
-    // stop video if playing
     try { valVideo.pause(); valVideo.currentTime = 0; } catch(e) {}
     videoWrap.style.display = "none";
     cuteBox.style.display = "none";
@@ -232,7 +266,7 @@
     choices.style.display = "flex";
   }
 
-  // YES: show the 3 options
+  // YES: show options
   yesBtn.addEventListener("click", () => {
     confettiBurst();
     resultEl.textContent = "Okayyy 🙈 pick one…";
@@ -240,7 +274,7 @@
     hideAllContent();
   });
 
-  // Choice buttons
+  // Choices
   videoChoice.addEventListener("click", () => {
     hideAllContent();
     videoWrap.style.display = "block";
@@ -262,7 +296,7 @@
   closeCuteBtn.addEventListener("click", goBackToChoices);
   closeDinnerBtn.addEventListener("click", goBackToChoices);
 
-  // NO button dodges
+  // NO dodges
   function moveNoButton(){
     const rect = noBtn.getBoundingClientRect();
     const pad = 16;
