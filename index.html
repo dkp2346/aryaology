@@ -162,6 +162,14 @@
   const resultEl = document.getElementById("result");
   const yesBtn = document.getElementById("yesBtn");
   const noBtn  = document.getElementById("noBtn");
+  // Hide the NO button after 15 seconds
+setTimeout(() => {
+  noBtn.style.transition = "opacity 0.6s ease";
+  noBtn.style.opacity = "0";
+  setTimeout(() => {
+    noBtn.style.display = "none";
+  }, 600);
+}, 15000);
 
   function confettiBurst(){
     for (let i=0;i<60;i++){
