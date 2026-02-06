@@ -14,7 +14,8 @@
       background: radial-gradient(circle at 20% 20%, var(--bg2), var(--bg1));
       overflow:hidden;
     }
-    .wrap{width:min(520px, 92vw); padding:24px}
+    /* Slightly bigger overall layout */
+    .wrap{width:min(620px, 94vw); padding:28px}
     .card3d{perspective:1200px}
     .card{
       position:relative; width:100%; aspect-ratio: 4 / 3;
@@ -123,28 +124,41 @@
               <button class="choiceBtn" id="dinnerChoice">🍽️ Dinner</button>
             </div>
 
-            <!-- Video area -->
+            <!-- Video area (smaller + Close/go back) -->
             <div id="videoWrap" style="display:none; margin-top:14px;">
               <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-                <button class="choiceBtn" id="closeVideoBtn">✖ Close</button>
+                <button class="choiceBtn" id="closeVideoBtn">✖ Go back</button>
               </div>
 
-              <video id="valVideo" playsinline controls style="width:100%; border-radius:16px;">
+              <video id="valVideo" playsinline controls
+                style="width:100%; max-width:420px; margin:0 auto; display:block; border-radius:16px;">
                 <source src="funnytiktok.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
 
-            <!-- Cute option: photo + message -->
+            <!-- Cute option: photo + message + Go back -->
             <div class="contentBox" id="cuteBox">
-              <img src="cutephoto.jpg" alt="cute" style="width:100%; border-radius:14px; margin-bottom:10px;">
+              <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+                <button class="choiceBtn" id="closeCuteBtn">✖ Go back</button>
+              </div>
+
+              <img src="cutephoto.jpg" alt="cute"
+                style="width:100%; max-width:420px; margin:0 auto 10px; display:block; border-radius:14px;">
+
               You make me laugh in a way nobody else can 🙈💛
-              <div style="opacity:.85; font-weight:650; margin-top:6px;">(Official Aryaology finding.)</div>
+              <div style="opacity:.85; font-weight:650; margin-top:6px;">
+                (Official Aryaology finding.)
+              </div>
             </div>
 
             <!-- Dinner message area -->
             <div class="contentBox" id="dinnerBox">
-              Dinner reservation on Valentines Saturday night past 7:30 PM more details to come later pookie. 
+              <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+                <button class="choiceBtn" id="closeDinnerBtn">✖ Go back</button>
+              </div>
+
+              Dinner reservation on valentines saturday night more details to come.
             </div>
 
             <div class="hint">Tap the card background to close ✨</div>
@@ -200,7 +214,10 @@
   const videoChoice = document.getElementById("videoChoice");
   const cuteChoice = document.getElementById("cuteChoice");
   const dinnerChoice = document.getElementById("dinnerChoice");
+
   const closeVideoBtn = document.getElementById("closeVideoBtn");
+  const closeCuteBtn = document.getElementById("closeCuteBtn");
+  const closeDinnerBtn = document.getElementById("closeDinnerBtn");
 
   function hideAllContent(){
     // stop video if playing
@@ -208,6 +225,11 @@
     videoWrap.style.display = "none";
     cuteBox.style.display = "none";
     dinnerBox.style.display = "none";
+  }
+
+  function goBackToChoices(){
+    hideAllContent();
+    choices.style.display = "flex";
   }
 
   // YES: show the 3 options
@@ -235,11 +257,10 @@
     dinnerBox.style.display = "block";
   });
 
-  // Close video and return to choices
-  closeVideoBtn.addEventListener("click", () => {
-    hideAllContent();
-    choices.style.display = "flex";
-  });
+  // Go back buttons
+  closeVideoBtn.addEventListener("click", goBackToChoices);
+  closeCuteBtn.addEventListener("click", goBackToChoices);
+  closeDinnerBtn.addEventListener("click", goBackToChoices);
 
   // NO button dodges
   function moveNoButton(){
