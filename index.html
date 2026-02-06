@@ -57,8 +57,7 @@
     .yes{background: linear-gradient(135deg, var(--accent), #ff6aa1); color:white; box-shadow: 0 12px 30px rgba(255,59,122,.28);}
     .no{background: linear-gradient(135deg, #111827, #374151); color:white; box-shadow: 0 12px 30px rgba(0,0,0,.2); position:relative;}
 
-    .result{text-align:center; font-size:18px; margin-top:10px; min-height:28px; font-weight:700;}
-
+    .result{text-align:center; font-size:18px; margin-top:10px; min-height:28px; font-weight:800;}
     .hint{opacity:.75; font-size:14px; text-align:center; margin-top:14px}
 
     .confetti{position:absolute; top:-10px; width:10px; height:14px; opacity:.9; animation: fall 1200ms linear forwards; border-radius:4px; transform: rotate(var(--r));}
@@ -77,20 +76,19 @@
       border: 1px solid rgba(0,0,0,.08);
       color: var(--ink);
       box-shadow: 0 10px 22px rgba(0,0,0,.08);
-      font-weight:700;
+      font-weight:800;
     }
 
-    /* Content areas */
     .contentBox{
       display:none;
       margin-top:14px;
       padding:14px;
       border-radius:16px;
       border: 1px solid rgba(0,0,0,.06);
-      background: rgba(255,255,255,.8);
+      background: rgba(255,255,255,.82);
       text-align:center;
       line-height:1.35;
-      font-weight:650;
+      font-weight:750;
     }
   </style>
 </head>
@@ -127,15 +125,21 @@
 
             <!-- Video area -->
             <div id="videoWrap" style="display:none; margin-top:14px;">
+              <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+                <button class="choiceBtn" id="closeVideoBtn">✖ Close</button>
+              </div>
+
               <video id="valVideo" playsinline controls style="width:100%; border-radius:16px;">
                 <source src="funnytiktok.mp4" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>
 
-            <!-- Cute message area -->
+            <!-- Cute option: photo + message -->
             <div class="contentBox" id="cuteBox">
+              <img src="cutephoto.jpg" alt="cute" style="width:100%; border-radius:14px; margin-bottom:10px;">
               You make me laugh in a way nobody else can 🙈💛
+              <div style="opacity:.85; font-weight:650; margin-top:6px;">(Official Aryaology finding.)</div>
             </div>
 
             <!-- Dinner message area -->
@@ -162,14 +166,15 @@
   const resultEl = document.getElementById("result");
   const yesBtn = document.getElementById("yesBtn");
   const noBtn  = document.getElementById("noBtn");
-  // Hide the NO button after 15 seconds
-setTimeout(() => {
-  noBtn.style.transition = "opacity 0.6s ease";
-  noBtn.style.opacity = "0";
+
+  // Progressive NO button behavior (25 seconds total)
+  setTimeout(() => { noBtn.textContent = "No (thinking...)"; }, 8000);
+  setTimeout(() => { noBtn.textContent = "You sure? 🙈"; }, 16000);
   setTimeout(() => {
-    noBtn.style.display = "none";
-  }, 600);
-}, 15000);
+    noBtn.style.transition = "opacity 0.6s ease";
+    noBtn.style.opacity = "0";
+    setTimeout(() => { noBtn.style.display = "none"; }, 600);
+  }, 25000);
 
   function confettiBurst(){
     for (let i=0;i<60;i++){
@@ -195,6 +200,7 @@ setTimeout(() => {
   const videoChoice = document.getElementById("videoChoice");
   const cuteChoice = document.getElementById("cuteChoice");
   const dinnerChoice = document.getElementById("dinnerChoice");
+  const closeVideoBtn = document.getElementById("closeVideoBtn");
 
   function hideAllContent(){
     // stop video if playing
@@ -204,7 +210,7 @@ setTimeout(() => {
     dinnerBox.style.display = "none";
   }
 
-  // YES: show the 3 options (not auto-play video anymore)
+  // YES: show the 3 options
   yesBtn.addEventListener("click", () => {
     confettiBurst();
     resultEl.textContent = "Okayyy 🙈 pick one…";
@@ -227,6 +233,12 @@ setTimeout(() => {
   dinnerChoice.addEventListener("click", () => {
     hideAllContent();
     dinnerBox.style.display = "block";
+  });
+
+  // Close video and return to choices
+  closeVideoBtn.addEventListener("click", () => {
+    hideAllContent();
+    choices.style.display = "flex";
   });
 
   // NO button dodges
